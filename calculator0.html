@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Basic Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #d0a7a7, #e0c1c1); 
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      position: relative;
+    }
+
+    .calculator {
+      background-color: #b38989;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      width: 270px;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    .calculator-heading {
+      font-size: 28px;
+      color: #9b6969; 
+      text-align: center;
+      margin-bottom: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      border-radius: 5px;
+    }
+
+    .calculator input {
+      width: 100%;
+      height: 50px;
+      font-size: 24px;
+      text-align: right;
+      margin-bottom: 15px;
+      padding: 10px;
+      border: 1px solid #cf9393;
+      border-radius: 10px;
+      background-color: #fff;
+      box-sizing: border-box;
+      color: #333;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .calculator input:focus {
+      background-color: #f9f9f9;
+      transform: scale(1.05);
+    }
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    button {
+      width: 50px;
+      height: 50px;
+      font-size: 22px;
+      margin: 5px 2px;
+      border: none;
+      border-radius: 10px;
+      background-color: #fff;
+      cursor: pointer;
+      transition: background-color 0.2s ease, transform 0.1s ease;
+    }
+
+    button:hover {
+      background-color: #d88d8d;
+      transform: scale(1.1);
+    }
+
+    button:active {
+      background-color: #ee5e5e;
+    }
+
+    .equal {
+      background-color: coral;
+      color: white;
+    }
+
+    .clear {
+      background-color: coral;
+      color: white;
+    }
+
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: scale(0.9); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes resultAnimation {
+      0% {
+        background-color: #fff;
+        transform: scale(1);
+      }
+      50% {
+        background-color: #e0f7e0; 
+        transform: scale(1.05);
+      }
+      100% {
+        background-color: #fff;
+        transform: scale(1);
+      }
+    }
+
+    .result-animation {
+      animation: resultAnimation 0.5s ease-out;
+    }
+
+    .footer-text {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      font-size: 12px;
+      color: #9b6969;
+      font-style: italic;
+      opacity: 0.7;
+    }
+  </style>
+</head>
+<body>
+
+  <h1 class="calculator-heading">Calculator</h1>
+  <div class="calculator">
+    <input type="text" id="result" disabled>
+    <div class="row">
+      <button data-value="7">7</button>
+      <button data-value="8">8</button>
+      <button data-value="9">9</button>
+      <button data-value="/">/</button>
+    </div>
+    <div class="row">
+      <button data-value="4">4</button>
+      <button data-value="5">5</button>
+      <button data-value="6">6</button>
+      <button data-value="*">*</button>
+    </div>
+    <div class="row">
+      <button data-value="1">1</button>
+      <button data-value="2">2</button>
+      <button data-value="3">3</button>
+      <button data-value="-">-</button>
+    </div>
+    <div class="row">
+      <button data-value="0">0</button>
+      <button id="clear" class="clear">C</button>
+      <button id="equals" class="equal">=</button>
+      <button data-value="+">+</button>
+    </div>
+  </div>
+
+  <div class="footer-text">Made by Shashwat Raj</div>
+
+  <script>
+    const resultField = document.getElementById('result');
+  
+    function appendValue(value) {
+      resultField.value += value;
+    }
+
+    function clearResult() {
+      resultField.value = '';
+    }
+
+    function calculate() {
+      try {
+        resultField.value = eval(resultField.value) || '';
+        resultField.classList.add('result-animation'); 
+        setTimeout(() => {
+          resultField.classList.remove('result-animation'); 
+        }, 500);
+      } catch {
+        resultField.value = 'Error';
+      }
+    }
+
+    document.querySelectorAll('button[data-value]').forEach(button => {
+      button.addEventListener('click', () => {
+        appendValue(button.getAttribute('data-value'));
+      });
+    });
+
+    document.getElementById('clear').addEventListener('click', clearResult);
+    document.getElementById('equals').addEventListener('click', calculate);
+
+    document.addEventListener('keydown', (e) => {
+      const key = e.key;
+
+      if ((key >= '0' && key <= '9') || ['+', '-', '*', '/', '.'].includes(key)) {
+        appendValue(key);
+      } else if (key === 'Enter') {
+        e.preventDefault(); 
+        calculate();
+      } else if (key === 'Backspace') {
+        resultField.value = resultField.value.slice(0, -1);
+      } else if (key.toLowerCase() === 'c') {
+        clearResult();
+      }
+    });
+  </script>
+
+</body>
+</html>
